@@ -14,10 +14,10 @@ ExternalProject_Add(node_headers
 ExternalProject_Get_Property(node_headers SOURCE_DIR)
 set(NODE_INCLUDE_DIR ${SOURCE_DIR}/include/node/)
 
-if (${PV_RECORDER_PLATFORM} STREQUAL "windows")
+if (${PV_RECORDER_PLATFORM} STREQUAL "windows" OR ${PV_RECORDER_PLATFORM} STREQUAL "win-arm64")
   set(NODE_WIN_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/node_win_lib )
   ExternalProject_Add(node_win_lib
-    URL https://nodejs.org/dist/v${NODE_VERSION}/win-x64/node.exe 
+    URL https://nodejs.org/dist/v${NODE_VERSION}/win-${PV_RECORDER_PLATFORM}/node.exe 
     DOWNLOAD_NO_EXTRACT on
     DOWNLOAD_DIR ${NODE_WIN_LIB_DIR}
     CONFIGURE_COMMAND ""
@@ -36,7 +36,7 @@ set_target_properties(pv_recorder_napi PROPERTIES
 )
 add_dependencies(pv_recorder_napi node_headers)
 
-if (${PV_RECORDER_PLATFORM} STREQUAL "windows")
+if (${PV_RECORDER_PLATFORM} STREQUAL "windows" OR ${PV_RECORDER_PLATFORM} STREQUAL "win-arm64")
     add_dependencies(pv_recorder_napi node_win_lib)
     target_sources(pv_recorder_napi PRIVATE delayhook.c)
 endif()
