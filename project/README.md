@@ -10,7 +10,7 @@
 
 - Linux (x86_64)
 - macOS (x86_64, arm64)
-- Windows (amd64)
+- Windows (amd64, arm64)
 - Raspberry Pi (Zero, 3, 4, 5)
 
 ## Compiling

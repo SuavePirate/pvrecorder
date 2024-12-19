@@ -11,8 +11,8 @@ option(PV_BUILD_NODE "Build Node.js libraries" ON)
 
 if(NOT PV_RECORDER_PLATFORM)
     message(FATAL_ERROR "No `PV_RECORDER_PLATFORM` value was given. Valid platforms are: \n"
-            "linux, mac-arm64, mac-x86_64, windows, raspberry-pi, raspberry-pi3-32, "
-            "raspberry-pi3-64, raspberry-pi4-32, raspberry-pi4-64, ")
+            "linux, mac-arm64, mac-x86_64, windows, win-arm64, raspberry-pi, raspberry-pi3-32, "
+            "raspberry-pi3-64, raspberry-pi4-32, raspberry-pi4-64, raspberry-pi5, raspberry-pi5-64")
 endif()
 
 if (${PV_RECORDER_PLATFORM} STREQUAL "mac-arm64")
@@ -60,6 +60,9 @@ elseif (${PV_RECORDER_PLATFORM} STREQUAL "raspberry-pi5-64")
     add_link_options(-mcpu=cortex-a76 -mtune=cortex-a76)
 elseif (${PV_RECORDER_PLATFORM} STREQUAL "windows")
     add_definitions(-D__PV_RECORDER_PLATFORM_WINDOWS__)
+elseif (${PV_RECORDER_PLATFORM} STREQUAL "win-arm64")
+    add_definitions(-D__PV_RECORDER_PLATFORM_WINDOWS__)
+    set(CMAKE_GENERATOR_PLATFORM "ARM64")
 else ()
     message(FATAL_ERROR "Unknown platform `${PV_RECORDER_PLATFORM}`.")
 endif ()
@@ -72,7 +75,7 @@ add_library(pv_recorder SHARED $<TARGET_OBJECTS:pv_recorder_object>)
 set_target_properties(pv_recorder PROPERTIES PUBLIC_HEADER include/pv_recorder.h)
 target_include_directories(pv_recorder PUBLIC include)
 
-if (NOT ${PV_RECORDER_PLATFORM} STREQUAL "windows")
+if (NOT ${PV_RECORDER_PLATFORM} STREQUAL "windows" AND NOT ${PV_RECORDER_PLATFORM} STREQUAL "win-arm64")
     target_link_libraries(pv_recorder PRIVATE pthread dl m)
     if(PV_LINK_ATOMIC)
         target_link_libraries(pv_recorder PRIVATE atomic)
